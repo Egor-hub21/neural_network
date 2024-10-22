@@ -28,19 +28,23 @@ def build_model() -> tf.keras.models.Model:
 
 def train(patch_data: str, patch_model: str) -> None:
     
+    # Names read files
+    names = ['x_train','x_val','y_train','y_val']
+
+    # Dictionary for storing data
+    data = {}
+    
     # Load data
-    x_train = pd.read_csv(f"{patch_data}/x_train.csv")
-    x_val = pd.read_csv(f"{patch_data}/x_val.csv")
-    y_train = pd.read_csv(f"{patch_data}/y_train.csv")
-    y_val = pd.read_csv(f"{patch_data}/x_val.csv")
+    for name in names:
+         data[name] = pd.read_csv(f"{patch_data}/{name}.csv")
     
     # Builder model
     model = build_model()
     
     model.fit(
-        x_train,
-        y_train,
-        validation_data = (x_val, y_val),
+        data['x_train'],
+        data['y_train'],
+        validation_data = (data['x_val'], data['y_val']),
         epochs = 20,
         batch_size = 32,
         shuffle =True,

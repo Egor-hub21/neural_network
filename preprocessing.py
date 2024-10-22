@@ -2,41 +2,35 @@ import os
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-def preprocessing(path_data: str, patch_output: str, file_name_train:str,
-                  file_name_val:str, file_name_test:str) -> None:
+def preprocessing(path_data: str, patch_output: str) -> None:
     """_summary_
 
     Args:
         path_data (str): _description_
         patch_output (str): _description_
-        file_name_train (str): _description_
-        file_name_val (str): _description_
-        file_name_test (str): _description_
     """
     
-    # создание директории для сохранения файла
+    # Создание директории для сохранения файла
     os.makedirs(patch_output, exist_ok=True)
     
-    # Словарь хранит название файла и dataFrame
+    features = ['x_train','x_val','x_test']
+    targets = ['y_train','y_val','y_test']
+    
+    # Хранит название файла и dataFrame
     data_dict = {}
-    # Перебор всех файлов в указанной директории
-    for filename in os.listdir(path_data):
-    # Проверка, является ли файл CSV
-        if filename.endswith('.csv'):
-            # Полный путь к файлу
-            file_path = os.path.join(path_data, filename)
-            # Загрузка данных в DataFrame
-            df = pd.read_csv(file_path)
-            # Извлечение имени файла без расширения
-            key = os.path.splitext(filename)[0]
-            # Добавление в словарь
-            data_dict[key] = df
+    
+    # Read files
+    for file_name in features + targets:
+        file_path = os.path.join(path_data, f'{file_name}.csv')
+        if os.path.isfile(file_path):
+            data_dict[file_name] = pd.read_csv(file_path)
+        else:
+            print(f'!!!_Файл {file_path} не найден_!!!')
 
     scaler = StandardScaler()
     
-    scaler.fit(data_dict[file_name_train])
-    
-    features = [file_name_train, file_name_val, file_name_test]
+    # Training StandardScaler 
+    scaler.fit(data_dict[features[0]])
       
     # 
     data_dataFrame = {}
@@ -53,15 +47,13 @@ def preprocessing(path_data: str, patch_output: str, file_name_train:str,
             data_dataFrame[name] = data                 
                 
         # Save
-        data_dataFrame[name].to_csv(f"{patch_output}/{name}.csv", index = False)    
+        data_dataFrame[name].to_csv(f"{patch_output}/{name}.csv",
+                                    index = False)    
  
  
     
 if __name__ == '__main__':
     path_data = 'data/split' 
     patch_output = 'data/preprocessed'
-    file_name_train = 'x_train'
-    file_name_val = 'x_val'
-    file_name_test = 'x_test'
-    preprocessing(path_data, patch_output, file_name_train,
-                  file_name_val, file_name_test)
+
+    preprocessing(path_data, patch_output)

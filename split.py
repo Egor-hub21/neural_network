@@ -30,7 +30,8 @@ def split(path: str, path_to_save:str, test_size:float,
     )
     
     x_test, x_val, y_test, y_val = train_test_split(
-        x_test_val, y_test_val, test_size = val_size / (test_size + val_size),
+        x_test_val, y_test_val,
+        test_size = val_size / (test_size + val_size),
         random_state = number_random
     )
     
