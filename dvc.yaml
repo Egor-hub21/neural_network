@@ -12,6 +12,8 @@ stages:
       - data/split/y_train.csv
       - data/split/y_val.csv
     desc: ""
+    params:
+      - split
   
   preprocessing:
     cmd: python preprocessing.py
@@ -30,6 +32,8 @@ stages:
       - data/preprocessed/y_train.csv
       - data/preprocessed/y_val.csv
     desc: ""
+    params:
+     - preprocessing
 
   train:
     cmd: python train.py
@@ -41,6 +45,8 @@ stages:
     outs:
       - models/model.keras
     desc: ""
+    params:
+      - train
 
   evaluate:
     cmd: python evaluate.py
@@ -49,5 +55,7 @@ stages:
       - data/preprocessed/x_test.csv
       - data/preprocessed/y_test.csv
     desc: ""
+    params:
+      - evaluate
   
       

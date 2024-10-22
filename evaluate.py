@@ -1,6 +1,8 @@
 import pandas as pd
 from tensorflow.keras.models import load_model
 
+import yaml
+
 
 def evaluate(patch_model: str, patch_data: str) -> None:
     
@@ -18,6 +20,10 @@ def evaluate(patch_model: str, patch_data: str) -> None:
     print(f'Metrics: {metrics}')
 
 if __name__ == '__main__':
-    patch_model = 'models/model.keras'
-    patch_data = 'data/preprocessed' 
+    
+    with open ('params.yaml') as f:
+        params = yaml.safe_load(f)
+    
+    patch_model = params['evaluate']['patch_model']
+    patch_data = params['evaluate']['patch_data']
     evaluate(patch_model, patch_data)

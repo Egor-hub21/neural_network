@@ -6,6 +6,8 @@ from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
+import yaml
+
 def build_model() -> tf.keras.models.Model:
     
     # Создание модели
@@ -55,6 +57,10 @@ def train(patch_data: str, patch_model: str) -> None:
     model.save(f'{patch_model}/model.keras')
 
 if __name__ == '__main__':
-    patch_data = 'data/preprocessed'
-    patch_model = 'models'
+    
+    with open ('params.yaml') as f:
+        params = yaml.safe_load(f)
+    
+    patch_data = ['train']['patch_data']
+    patch_model = ['train']['patch_model']
     train(patch_data, patch_model)

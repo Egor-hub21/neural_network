@@ -2,6 +2,8 @@ import os
 import pandas as pd 
 from sklearn.model_selection import train_test_split
 
+import yaml
+
 def split(path: str, path_to_save:str, test_size:float,
           val_size: float, name_target: str, number_random: int):
     """_summary_
@@ -47,11 +49,15 @@ def split(path: str, path_to_save:str, test_size:float,
         value.to_csv(f"{path_to_save}/{key}.csv", index = False) 
     
 if __name__ == "__main__":
-    path = "data/raw/solar_output.csv"
-    path_to_save = "data/split"
-    test_size =  0.1
-    val_size = 0.1
-    name_target = "generation"
-    number_random = 42
+    
+    with open ('params.yaml') as f:
+        params = yaml.safe_load(f)
+    
+    path = params['split']['path']
+    path_to_save = params['split']['path_to_save']
+    test_size = params['split']['test_size']
+    val_size = params['split']['val_size']
+    name_target = params['split']['name_target']
+    number_random = params['split']['number_random']
     split(path, path_to_save, test_size,
           val_size, name_target, number_random)

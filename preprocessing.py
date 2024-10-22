@@ -2,6 +2,8 @@ import os
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
+import yaml
+
 def preprocessing(path_data: str, patch_output: str) -> None:
     """_summary_
 
@@ -53,7 +55,11 @@ def preprocessing(path_data: str, patch_output: str) -> None:
  
     
 if __name__ == '__main__':
-    path_data = 'data/split' 
-    patch_output = 'data/preprocessed'
+    
+    with open ('params.yaml') as f:
+        params = yaml.safe_load(f)
+        
+    path_data = params['preprocessing']['path_data'] 
+    patch_output = params['preprocessing']['patch_output']
 
     preprocessing(path_data, patch_output)
