@@ -32,8 +32,6 @@ stages:
       - data/preprocessed/y_train.csv
       - data/preprocessed/y_val.csv
     desc: ""
-    params:
-     - preprocessing
 
   train:
     cmd: python train.py
@@ -47,6 +45,8 @@ stages:
     desc: ""
     params:
       - train
+    metrics:
+      - metrics.json
 
   evaluate:
     cmd: python evaluate.py
@@ -55,7 +55,7 @@ stages:
       - data/preprocessed/x_test.csv
       - data/preprocessed/y_test.csv
     desc: ""
-    params:
-      - evaluate
+    metrics:
+      - test_metrics.json
   
       

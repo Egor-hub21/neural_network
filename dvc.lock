@@ -7,6 +7,12 @@ stages:
       hash: md5
       md5: 2ff2b936ae39e6d2dff8b6044f31b014
       size: 112208
+    params:
+      params.yaml:
+        split:
+          test_size: 0.1
+          val_size: 0.1
+          number_random: 42
     outs:
     - path: data/split/x_test.csv
       hash: md5
@@ -103,10 +109,19 @@ stages:
       hash: md5
       md5: 668ff7c947828a5eb1fe4ff1ab5992e5
       size: 1413
+    params:
+      params.yaml:
+        train:
+          epochs: 20
+          batch_size: 32
     outs:
+    - path: metrics.json
+      hash: md5
+      md5: 7beede8337e3192a5bed71f7ac84a7c0
+      size: 71
     - path: models/model.keras
       hash: md5
-      md5: 10e509e3c45cf36be02e60e5240d7ef5
+      md5: 186999134d4a9e980266bd496219823c
       size: 35754
   evaluate:
     cmd: python evaluate.py
@@ -121,5 +136,10 @@ stages:
       size: 1481
     - path: models/model.keras
       hash: md5
-      md5: 10e509e3c45cf36be02e60e5240d7ef5
+      md5: 186999134d4a9e980266bd496219823c
       size: 35754
+    outs:
+    - path: test_metrics.json
+      hash: md5
+      md5: 06c466403cf98ca7f438f883a00395bd
+      size: 63

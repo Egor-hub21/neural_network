@@ -2,6 +2,7 @@ import pandas as pd
 from tensorflow.keras.models import load_model
 
 import yaml
+import json
 
 
 def evaluate(patch_model: str, patch_data: str) -> None:
@@ -14,16 +15,22 @@ def evaluate(patch_model: str, patch_data: str) -> None:
     y_test = pd.read_csv(f"{patch_data}/y_test.csv")
 
     # Evaluate the model
-    loss, metrics = model.evaluate(x_test, y_test)
+    loss, metric = model.evaluate(x_test, y_test)
     
-    print(f'Loss: {loss}')
-    print(f'Metrics: {metrics}')
+    metrics = {
+        'Metric': metric,
+        'loss': loss
+    }
+    
+    with open('test_metrics.json', 'w') as file:
+        json.dump(metrics, file, indent = 4)
+    
 
 if __name__ == '__main__':
     
-    with open ('params.yaml') as f:
-        params = yaml.safe_load(f)
+    with open ('paths.yaml') as file:
+        paths = yaml.safe_load(file)
     
-    patch_model = params['evaluate']['patch_model']
-    patch_data = params['evaluate']['patch_data']
+    patch_model = paths['evaluate']['patch_model']
+    patch_data = paths['evaluate']['patch_data']
     evaluate(patch_model, patch_data)

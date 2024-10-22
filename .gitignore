@@ -9,3 +9,10 @@ data/
 
 # Игнорировать папку с моделью
 models/
+/metrics.json
+
+
+/*.json
+
+.dvc/
+.neptune/

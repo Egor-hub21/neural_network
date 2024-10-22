@@ -56,10 +56,10 @@ def preprocessing(path_data: str, patch_output: str) -> None:
     
 if __name__ == '__main__':
     
-    with open ('params.yaml') as f:
-        params = yaml.safe_load(f)
+    with open ('paths.yaml') as file:
+        paths = yaml.safe_load(file)
         
-    path_data = params['preprocessing']['path_data'] 
-    patch_output = params['preprocessing']['patch_output']
+    path_data = paths['preprocessing']['path_data']
+    patch_output = paths['preprocessing']['patch_output']
 
     preprocessing(path_data, patch_output)

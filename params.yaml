@@ -1,19 +1,8 @@
 split:
-  path: "data/raw/solar_output.csv"
-  path_to_save: "data/split"
   test_size:  0.1
   val_size: 0.1
-  name_target: "generation"
   number_random: 42
 
-preprocessing:
-  path_data: 'data/split' 
-  patch_output: 'data/preprocessed'
-
 train:
-  patch_data: 'data/preprocessed'
-  patch_model: 'models'
-
-evaluate:
-  patch_model: 'models/model.keras'
-  patch_data: 'data/preprocessed' 
+  epochs: 20
+  batch_size: 32

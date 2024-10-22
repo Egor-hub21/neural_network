@@ -50,14 +50,20 @@ def split(path: str, path_to_save:str, test_size:float,
     
 if __name__ == "__main__":
     
-    with open ('params.yaml') as f:
-        params = yaml.safe_load(f)
+    with open ('params.yaml') as file:
+        params = yaml.safe_load(file)
     
-    path = params['split']['path']
-    path_to_save = params['split']['path_to_save']
+    with open ('paths.yaml') as file:
+        paths = yaml.safe_load(file)
+    
+    path = paths['split']['path']
+    path_to_save = paths['split']['path_to_save']
+    
     test_size = params['split']['test_size']
     val_size = params['split']['val_size']
-    name_target = params['split']['name_target']
     number_random = params['split']['number_random']
+    
+    name_target = "generation"
+        
     split(path, path_to_save, test_size,
           val_size, name_target, number_random)
