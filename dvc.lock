@@ -1,0 +1,125 @@
+schema: '2.0'
+stages:
+  split:
+    cmd: python split.py
+    deps:
+    - path: data/raw/solar_output.csv
+      hash: md5
+      md5: 2ff2b936ae39e6d2dff8b6044f31b014
+      size: 112208
+    outs:
+    - path: data/split/x_test.csv
+      hash: md5
+      md5: b28a110e3c58624ea89806b950833fc0
+      size: 10359
+    - path: data/split/x_train.csv
+      hash: md5
+      md5: 1c33ba003f061b0e4daa87c0aaaf4037
+      size: 82106
+    - path: data/split/x_val.csv
+      hash: md5
+      md5: 7e6ecb50dd3f3ad04b5dfd1faf8faa78
+      size: 10386
+    - path: data/split/y_test.csv
+      hash: md5
+      md5: 0998cddeda2f757f53003589dd75b0ac
+      size: 1481
+    - path: data/split/y_train.csv
+      hash: md5
+      md5: 600caedbcc4090139f8a61141af73e58
+      size: 11319
+    - path: data/split/y_val.csv
+      hash: md5
+      md5: 668ff7c947828a5eb1fe4ff1ab5992e5
+      size: 1413
+  preprocessing:
+    cmd: python preprocessing.py
+    deps:
+    - path: data/split/x_test.csv
+      hash: md5
+      md5: b28a110e3c58624ea89806b950833fc0
+      size: 10359
+    - path: data/split/x_train.csv
+      hash: md5
+      md5: 1c33ba003f061b0e4daa87c0aaaf4037
+      size: 82106
+    - path: data/split/x_val.csv
+      hash: md5
+      md5: 7e6ecb50dd3f3ad04b5dfd1faf8faa78
+      size: 10386
+    - path: data/split/y_test.csv
+      hash: md5
+      md5: 0998cddeda2f757f53003589dd75b0ac
+      size: 1481
+    - path: data/split/y_train.csv
+      hash: md5
+      md5: 600caedbcc4090139f8a61141af73e58
+      size: 11319
+    - path: data/split/y_val.csv
+      hash: md5
+      md5: 668ff7c947828a5eb1fe4ff1ab5992e5
+      size: 1413
+    outs:
+    - path: data/preprocessed/x_test.csv
+      hash: md5
+      md5: de83fcee0790b0022f5b4c55e4c90b26
+      size: 41369
+    - path: data/preprocessed/x_train.csv
+      hash: md5
+      md5: f9c1c10de3965057c5aacd7d94e5fca9
+      size: 329764
+    - path: data/preprocessed/x_val.csv
+      hash: md5
+      md5: b8dc2b80258f2ca9e88333140faa2cbd
+      size: 41384
+    - path: data/preprocessed/y_test.csv
+      hash: md5
+      md5: 0998cddeda2f757f53003589dd75b0ac
+      size: 1481
+    - path: data/preprocessed/y_train.csv
+      hash: md5
+      md5: 600caedbcc4090139f8a61141af73e58
+      size: 11319
+    - path: data/preprocessed/y_val.csv
+      hash: md5
+      md5: 668ff7c947828a5eb1fe4ff1ab5992e5
+      size: 1413
+  train:
+    cmd: python train.py
+    deps:
+    - path: data/preprocessed/x_train.csv
+      hash: md5
+      md5: f9c1c10de3965057c5aacd7d94e5fca9
+      size: 329764
+    - path: data/preprocessed/x_val.csv
+      hash: md5
+      md5: b8dc2b80258f2ca9e88333140faa2cbd
+      size: 41384
+    - path: data/preprocessed/y_train.csv
+      hash: md5
+      md5: 600caedbcc4090139f8a61141af73e58
+      size: 11319
+    - path: data/preprocessed/y_val.csv
+      hash: md5
+      md5: 668ff7c947828a5eb1fe4ff1ab5992e5
+      size: 1413
+    outs:
+    - path: models/model.keras
+      hash: md5
+      md5: 10e509e3c45cf36be02e60e5240d7ef5
+      size: 35754
+  evaluate:
+    cmd: python evaluate.py
+    deps:
+    - path: data/preprocessed/x_test.csv
+      hash: md5
+      md5: de83fcee0790b0022f5b4c55e4c90b26
+      size: 41369
+    - path: data/preprocessed/y_test.csv
+      hash: md5
+      md5: 0998cddeda2f757f53003589dd75b0ac
+      size: 1481
+    - path: models/model.keras
+      hash: md5
+      md5: 10e509e3c45cf36be02e60e5240d7ef5
+      size: 35754

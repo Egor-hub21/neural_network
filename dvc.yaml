@@ -1,0 +1,53 @@
+stages:
+
+  split:
+    cmd: python split.py
+    deps:
+      - data/raw/solar_output.csv
+    outs:
+      - data/split/x_test.csv
+      - data/split/x_train.csv
+      - data/split/x_val.csv
+      - data/split/y_test.csv
+      - data/split/y_train.csv
+      - data/split/y_val.csv
+    desc: ""
+  
+  preprocessing:
+    cmd: python preprocessing.py
+    deps:
+      - data/split/x_test.csv
+      - data/split/x_train.csv
+      - data/split/x_val.csv
+      - data/split/y_test.csv
+      - data/split/y_train.csv
+      - data/split/y_val.csv
+    outs:
+      - data/preprocessed/x_test.csv
+      - data/preprocessed/x_train.csv
+      - data/preprocessed/x_val.csv
+      - data/preprocessed/y_test.csv
+      - data/preprocessed/y_train.csv
+      - data/preprocessed/y_val.csv
+    desc: ""
+
+  train:
+    cmd: python train.py
+    deps:
+      - data/preprocessed/x_train.csv
+      - data/preprocessed/x_val.csv
+      - data/preprocessed/y_train.csv
+      - data/preprocessed/y_val.csv
+    outs:
+      - models/model.keras
+    desc: ""
+
+  evaluate:
+    cmd: python evaluate.py
+    deps:
+      - models/model.keras
+      - data/preprocessed/x_test.csv
+      - data/preprocessed/y_test.csv
+    desc: ""
+  
+      

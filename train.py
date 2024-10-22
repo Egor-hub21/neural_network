@@ -51,6 +51,6 @@ def train(patch_data: str, patch_model: str) -> None:
     model.save(f'{patch_model}/model.keras')
 
 if __name__ == '__main__':
-    patch_data = 'data/preprocessing'
+    patch_data = 'data/preprocessed'
     patch_model = 'models'
     train(patch_data, patch_model)

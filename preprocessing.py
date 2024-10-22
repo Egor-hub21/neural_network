@@ -59,7 +59,7 @@ def preprocessing(path_data: str, patch_output: str, file_name_train:str,
     
 if __name__ == '__main__':
     path_data = 'data/split' 
-    patch_output = 'data/preprocessing'
+    patch_output = 'data/preprocessed'
     file_name_train = 'x_train'
     file_name_val = 'x_val'
     file_name_test = 'x_test'

@@ -19,5 +19,5 @@ def evaluate(patch_model: str, patch_data: str) -> None:
 
 if __name__ == '__main__':
     patch_model = 'models/model.keras'
-    patch_data = 'data/preprocessing' 
+    patch_data = 'data/preprocessed' 
     evaluate(patch_model, patch_data)
