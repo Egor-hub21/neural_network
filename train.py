@@ -4,6 +4,7 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dropout
 
 from typing import Union
 
@@ -22,12 +23,15 @@ def build_model(params_deep_layers: dict[str, dict[str, Union[str, int]]],
     # Создание модели
     model = Sequential()
     
-    for layer in params_deep_layers.values():
-        if 'activation' in layer.keys():
-            model.add(Dense(layer['count_neuron'],
-                            activation = layer['activation']))
+    for name_layer, layer in params_deep_layers.items():
+        if (name_layer.startswith('dropout')):
+            model.add(Dropout(layer['count_neuron']))
         else:
-            model.add(Dense(layer['count_neuron']))
+            if 'activation' in layer.keys():
+                model.add(Dense(layer['count_neuron'],
+                                activation = layer['activation']))
+            else:
+                model.add(Dense(layer['count_neuron']))
     
     # Компиляция модели (Выбор hyper params)
     model.compile(
@@ -41,7 +45,7 @@ def build_model(params_deep_layers: dict[str, dict[str, Union[str, int]]],
 
 def train(patch_data: str, patch_model: str,
           params_fit: dict[str, Union[bool, int, str]],
-          params_deep_layers: dict[str, dict[str, Union[str, int]]],
+          params_deep_layers: dict[str, dict[str, Union[str, int, float]]],
           params_compile: dict[str, Union[str, list[str]]],
           run) -> None:
     

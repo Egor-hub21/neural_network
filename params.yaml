@@ -5,13 +5,24 @@ split:
 
 train:
   fit:
-    epochs: 50
+    epochs: 150
     batch_size: 64
 
   deep_layers:
     dense:
-      count_neuron: 8
+      count_neuron: 128
       activation: relu
+    dense_1:
+      count_neuron: 32
+      activation: relu
+    dense_2:
+      count_neuron: 128
+      activation: relu
+    dense_3:
+      count_neuron: 64
+      activation: relu
+    dropout:
+      count_neuron: 0.5
     output:
       count_neuron: 1
   
