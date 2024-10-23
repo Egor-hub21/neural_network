@@ -5,16 +5,18 @@ split:
 
 train:
   fit:
-    epochs: 20
-    batch_size: 32
+    epochs: 50
+    batch_size: 64
 
   deep_layers:
     dense:
-      count_neuron: 1
+      count_neuron: 8
       activation: relu
+    output:
+      count_neuron: 1
   
   compile:
     optimizer: adam
     loss: mse
-    metrics: [mse]
+    metrics: [mae]
 

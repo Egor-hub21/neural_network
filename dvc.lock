@@ -113,11 +113,14 @@ stages:
       params.yaml:
         train:
           fit:
-            epochs: 20
-            batch_size: 32
+            epochs: 50
+            batch_size: 64
           deep_layers:
             dense:
-              count_neuron: 1
+              count_neuron: 32
+              activation: relu
+            dense_1:
+              count_neuron: 8
               activation: relu
           compile:
             optimizer: adam
@@ -127,12 +130,12 @@ stages:
     outs:
     - path: metrics.json
       hash: md5
-      md5: aa9616abafad789463491ffa95745e7c
-      size: 65
+      md5: dec5cd788283bcdf2db84ddc0be86578
+      size: 70
     - path: models/model.keras
       hash: md5
-      md5: a36ba0f1a8301401a47919ccad20daa4
-      size: 20990
+      md5: e6b6c9e6146898160fdc9fd856f0e38f
+      size: 32488
   evaluate:
     cmd: python evaluate.py
     deps:
@@ -146,10 +149,10 @@ stages:
       size: 1481
     - path: models/model.keras
       hash: md5
-      md5: a36ba0f1a8301401a47919ccad20daa4
-      size: 20990
+      md5: f0dbcdc9361e7563402b39bac8b0c883
+      size: 32488
     outs:
     - path: test_metrics.json
       hash: md5
-      md5: 1d78e25cdb69dc9bf670727af3dfd25a
-      size: 59
+      md5: 01fb0e40e510a2a93eccbdbef74abbcd
+      size: 63

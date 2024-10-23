@@ -13,10 +13,8 @@ import json
 import neptune
 from neptune_tensorflow_keras import NeptuneCallback
 
-run = neptune.init_run(
-    project="Egor-hub21/Test-project",
-    api_token="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiI2NGI2MTc5OC01Njc3LTQ5NjAtYWU4OC1kNDVlYjVlZjU5OTAifQ==",
-)  # your credentials
+
+import log
 
 def build_model(params_deep_layers: dict[str, dict[str, Union[str, int]]],
     params_compile: dict[str, Union[str, list[str]]]) -> tf.keras.models.Model:
@@ -25,10 +23,11 @@ def build_model(params_deep_layers: dict[str, dict[str, Union[str, int]]],
     model = Sequential()
     
     for layer in params_deep_layers.values():
-        model.add(Dense(layer['count_neuron'],
-                        activation = layer['activation']))
-    
-    model.add(Dense(1))
+        if 'activation' in layer.keys():
+            model.add(Dense(layer['count_neuron'],
+                            activation = layer['activation']))
+        else:
+            model.add(Dense(layer['count_neuron']))
     
     # Компиляция модели (Выбор hyper params)
     model.compile(
@@ -43,7 +42,8 @@ def build_model(params_deep_layers: dict[str, dict[str, Union[str, int]]],
 def train(patch_data: str, patch_model: str,
           params_fit: dict[str, Union[bool, int, str]],
           params_deep_layers: dict[str, dict[str, Union[str, int]]],
-          params_compile: dict[str, Union[str, list[str]]]) -> None:
+          params_compile: dict[str, Union[str, list[str]]],
+          run) -> None:
     
     # Names read files
     names = ['x_train','x_val','y_train','y_val']
@@ -72,10 +72,7 @@ def train(patch_data: str, patch_model: str,
         callbacks = [neptune_callback],
         )
     
-    metrics = {
-        'train_loss': history.history['loss'][-1],
-        'val_loss': history.history['val_loss'][-1]
-    }
+    metrics = {key: values[-1] for key, values in  history.history.items()}
     
     with open('metrics.json', 'w') as file:
         json.dump(metrics, file, indent = 4)
@@ -85,7 +82,6 @@ def train(patch_data: str, patch_model: str,
     
     # Логирование модели    
     run['model'].upload(f'{patch_model}/model.keras')
-    run.stop()
 
 if __name__ == '__main__':
     
@@ -95,9 +91,11 @@ if __name__ == '__main__':
     with open ('paths.yaml') as file:
         paths = yaml.safe_load(file)
     
+    run = log.init_neptune()
+    
     # Логирование параметров    
     run['parameters'] = params['train']
-        
+    
     patch_data = paths['train']['patch_data']
     patch_model = paths['train']['patch_model']
     
@@ -106,4 +104,6 @@ if __name__ == '__main__':
     params_fit = params['train']['fit']
     
     train(patch_data, patch_model, params_fit, 
-          params_deep_layers, params_compile)
+          params_deep_layers, params_compile, run)
+    
+    log.save_neptune_run_file(run)
