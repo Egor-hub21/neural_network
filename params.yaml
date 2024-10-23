@@ -4,5 +4,17 @@ split:
   number_random: 42
 
 train:
-  epochs: 20
-  batch_size: 32
+  fit:
+    epochs: 20
+    batch_size: 32
+
+  deep_layers:
+    dense:
+      count_neuron: 1
+      activation: relu
+  
+  compile:
+    optimizer: adam
+    loss: mse
+    metrics: [mse]
+

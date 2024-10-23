@@ -2,9 +2,10 @@ import os
 
 import pandas as pd
 import tensorflow as tf
-from tensorflow import keras
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
+
+from typing import Union
 
 import yaml
 import json
@@ -17,28 +18,32 @@ run = neptune.init_run(
     api_token="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiI2NGI2MTc5OC01Njc3LTQ5NjAtYWU4OC1kNDVlYjVlZjU5OTAifQ==",
 )  # your credentials
 
-def build_model() -> tf.keras.models.Model:
+def build_model(params_deep_layers: dict[str, dict[str, Union[str, int]]],
+    params_compile: dict[str, Union[str, list[str]]]) -> tf.keras.models.Model:
     
     # Создание модели
-    model = keras.models.Sequential([
-    Dense(32, activation='relu'),
-    Dense(16, activation='relu'),
-    Dense(1),
-    ])
+    model = Sequential()
     
+    for layer in params_deep_layers.values():
+        model.add(Dense(layer['count_neuron'],
+                        activation = layer['activation']))
     
-    # Компиляция модели (Выбор гиппер параметров)
+    model.add(Dense(1))
+    
+    # Компиляция модели (Выбор hyper params)
     model.compile(
-    optimizer='adam',
-    loss='mse',
-    metrics=["mse"]
+    optimizer = params_compile['optimizer'],
+    loss = params_compile['loss'],
+    metrics = params_compile['metrics'],
 
 )
     return model
 
 
 def train(patch_data: str, patch_model: str,
-          epochs: int, batch_size: int) -> None:
+          params_fit: dict[str, Union[bool, int, str]],
+          params_deep_layers: dict[str, dict[str, Union[str, int]]],
+          params_compile: dict[str, Union[str, list[str]]]) -> None:
     
     # Names read files
     names = ['x_train','x_val','y_train','y_val']
@@ -51,7 +56,7 @@ def train(patch_data: str, patch_model: str,
          data[name] = pd.read_csv(f"{patch_data}/{name}.csv")
     
     # Builder model
-    model = build_model()
+    model = build_model(params_deep_layers, params_compile)
     
     # Создание callback 
     neptune_callback = NeptuneCallback(run=run)
@@ -60,8 +65,8 @@ def train(patch_data: str, patch_model: str,
         data['x_train'],
         data['y_train'],
         validation_data = (data['x_val'], data['y_val']),
-        epochs = epochs,
-        batch_size = batch_size,
+        epochs = params_fit['epochs'],
+        batch_size = params_fit['batch_size'],
         shuffle =True,
         verbose = 0,
         callbacks = [neptune_callback],
@@ -96,8 +101,9 @@ if __name__ == '__main__':
     patch_data = paths['train']['patch_data']
     patch_model = paths['train']['patch_model']
     
-    epochs = params['train']['epochs']
-    batch_size = params['train']['batch_size']
+    params_deep_layers = params['train']['deep_layers']
+    params_compile = params['train']['compile']
+    params_fit = params['train']['fit']
     
-    train(patch_data, patch_model,
-          epochs, batch_size)
+    train(patch_data, patch_model, params_fit, 
+          params_deep_layers, params_compile)

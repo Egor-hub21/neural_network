@@ -28,13 +28,13 @@ def split(path: str, path_to_save:str, test_size:float,
     
     x_train, x_test_val, y_train, y_test_val = train_test_split(
         features, target, test_size = test_size + val_size,
-        random_state = number_random
+        random_state = number_random, shuffle = True
     )
     
     x_test, x_val, y_test, y_val = train_test_split(
         x_test_val, y_test_val,
         test_size = val_size / (test_size + val_size),
-        random_state = number_random
+        random_state = number_random, shuffle = True
     )
     
     split_data = {'x_train': x_train,
